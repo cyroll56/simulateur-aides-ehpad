@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulateur d’aides EHPAD</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+    label { display: block; margin: 0.5em 0 0.2em; }
+    input, select { width: 200px; padding: 5px; margin-bottom: 1em; }
+    button { padding: 0.5em 1em; }
+    #resultat { margin-top: 2em; background: #fff; padding: 1em; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+  <h1>Simulateur d’aides financières pour vivre en EHPAD</h1>
+
+  <form id="simulateur">
+    <label>Âge :</label>
+    <input type="number" id="age" required>
+
+    <label>GIR (1 à 6) :</label>
+    <input type="number" id="gir" min="1" max="6" required>
+
+    <label>Revenus mensuels (€) :</label>
+    <input type="number" id="revenus" required>
+
+    <label>Patrimoine important ?</label>
+    <select id="patrimoine">
+      <option value="Non">Non</option>
+      <option value="Oui">Oui</option>
+    </select>
+
+    <label>EHPAD conventionné APL ?</label>
+    <select id="ehpad">
+      <option value="Oui">Oui</option>
+      <option value="Non">Non</option>
+    </select>
+
+    <label>Obligés alimentaires avec ressources suffisantes ?</label>
+    <select id="obliges">
+      <option value="Non">Non</option>
+      <option value="Oui">Oui</option>
+    </select>
+
+    <button type="submit">Calculer les aides</button>
+  </form>
+
+  <div id="resultat"></div>
+
+  <script>
+    document.getElementById("simulateur").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const age = parseInt(document.getElementById("age").value);
+      const gir = parseInt(document.getElementById("gir").value);
+      const revenus = parseInt(document.getElementById("revenus").value);
+      const patrimoine = document.getElementById("patrimoine").value;
+      const ehpad = document.getElementById("ehpad").value;
+      const obliges = document.getElementById("obliges").value;
+
+      let result = "<h2>Résultats :</h2><ul>";
+
+      if (age >= 60 && gir >= 1 && gir <= 4) {
+        result += "<li>✅ Éligible à l'APA</li>";
+      } else {
+        result += "<li>❌ Pas éligible à l'APA</li>";
+      }
+
+      if (revenus < 2000 && patrimoine === "Non" && obliges === "Non") {
+        result += "<li>✅ Éligible à l'ASH</li>";
+      } else {
+        result += "<li>❌ Pas éligible à l'ASH</li>";
+      }
+
+      if (ehpad === "Oui") {
+        result += "<li>✅ Éligible à l'APL</li>";
+      } else {
+        result += "<li>❔ Vérifiez si l'ALS est possible (EHPAD non conventionné)</li>";
+      }
+
+      result += "<li>💡 Vous pouvez également bénéficier d'une réduction d’impôt sur les frais engagés.</li>";
+      result += "</ul>";
+
+      document.getElementById("resultat").innerHTML = result;
+    });
+  </script>
+
+</body>
+</html>
